@@ -96,18 +96,28 @@ Terrible hack workaround for the fact that elisp lacks fscking closures.")
        (narrow-to-region (+ (point) 1) (- (mark) 1))
        ,@body)))
 
+(defun durendal-sort-words (start end)
+  (let ((sorted (sort (split-string (buffer-substring-no-properties start end)) 'string<)))
+    (delete-region start end)
+    (insert (mapconcat 'identity sorted " "))))
+
 (defun durendal-sort-subsection (subsection)
   (goto-char (point-min))
   (when (search-forward (concat subsection " ") nil t)
     (durendal-within-sexp
-     (let ((sorted (sort (split-string (buffer-substring-no-properties (point-min) (point-max))) 'string<)))
-       (delete-region (point-min) (point-max))
-       (insert (mapconcat 'identity sorted " "))))))
+     (durendal-sort-words (point-min) (point-max)))))
 
-;; (defun durendal-sort-libspecs ()
-;;   (goto-char (point-min))
-;;   (while ())
-;;   )
+(defun durendal-sort-libspec ()
+  (durendal-within-sexp
+   (when (and (search-forward-regexp "\\s " nil t)
+              (not (= (char-after) (string-to-char ":"))))
+     (durendal-sort-words (point) (point-max)))))
+
+(defun durendal-sort-libspecs ()
+  (while (search-forward-regexp "[(\\[]\\S +\\." nil t)
+    (search-backward-regexp "[(\\[]" nil t)
+    (durendal-sort-libspec)
+    (forward-sexp)))
 
 (defun durendal-sort-section (section)
   (durendal-with-section
