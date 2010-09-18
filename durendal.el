@@ -96,6 +96,7 @@ Terrible hack workaround for the fact that elisp lacks fscking closures.")
        ,@body)))
 
 (defun durendal-sort-subsection (subsection)
+  (goto-char (point-min))
   (when (search-forward (concat subsection " ") nil t)
     (durendal-within-sexp
      (let ((sorted (sort (split-string (buffer-substring-no-properties (point-min) (point-max))) 'string<)))
