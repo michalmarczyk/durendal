@@ -95,6 +95,7 @@ Terrible hack workaround for the fact that elisp lacks fscking closures.")
    ;;(forward-symbol) -- bizarre-error
    (search-forward-regexp "(.* ")
    (insert "\n")
+   (indent-region (point-min) (point-max))
    ;; TODO: handle wrapped lines
    (sort-lines nil (point) (- (point-max) 1))
    (goto-char (point-min))
