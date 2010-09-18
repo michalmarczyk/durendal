@@ -110,7 +110,7 @@ Terrible hack workaround for the fact that elisp lacks fscking closures.")
    (goto-char (point-min))
    ;;(forward-word) -- refer-clojure
    ;;(forward-symbol) -- bizarre-error
-   (search-forward-regexp "(.* ")
+   (search-forward-regexp "(\\S +\\S+ ")
    (insert "\n")
    (indent-region (point-min) (point-max))
    ;; TODO: handle wrapped lines
