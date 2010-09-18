@@ -7,7 +7,7 @@
 ;; Version: 0.1
 ;; Keywords: lisp clojure slime
 ;; Created: 2010-08-13
-;; Package-Requires: ((clojure-mode "1.7") (slime "20100404") (paredit "22"))
+;; Package-Requires: ((clojure-mode "1.7") (slime "20100404"))
 
 ;; This file is not part of GNU Emacs.
 
@@ -44,6 +44,7 @@
 ;; * fix sort-ns to support wrapped lines
 ;; * search for vars that are referenced but not refered; offer to insert refer
 ;; * remove unused refers
+;; * package and require paredit 22
 
 ;;; License:
 
@@ -117,6 +118,7 @@ Terrible hack workaround for the fact that elisp lacks fscking closures.")
    (setq h (buffer-substring (point) (point-max)))
    (join-line t)))
 
+;;;###autoload
 (defun durendal-sort-ns ()
   (interactive)
   (save-excursion
@@ -126,6 +128,7 @@ Terrible hack workaround for the fact that elisp lacks fscking closures.")
 
 ;; launcher
 
+;;;###autoload
 (defun durendal-jack-in (&optional port-prompt)
   (interactive "P")
   (let ((root (locate-dominating-file default-directory "project.clj")))
@@ -147,6 +150,7 @@ Terrible hack workaround for the fact that elisp lacks fscking closures.")
 
 ;; debugger
 
+;;;###autoload
 (defun durendal-dim-sldb-font-lock ()
   "Dim irrelevant lines in Clojure debugger buffers."
   (if (string-match "clojure" (buffer-name))
@@ -178,12 +182,14 @@ Terrible hack workaround for the fact that elisp lacks fscking closures.")
              (durendal-in-current-project? buffer-file-name))
     (slime-compile-and-load-file)))
 
+;;;###autoload
 (defun durendal-enable-auto-compile ()
   (make-local-variable 'after-save-hook)
   (add-hook 'after-save-hook 'durendal-auto-compile))
 
 ;; repl
 
+;;;###autoload
 (defun durendal-slime-repl-paredit ()
   (require 'paredit)
   (define-key slime-repl-mode-map
@@ -198,6 +204,7 @@ Terrible hack workaround for the fact that elisp lacks fscking closures.")
 
 ;; entry point:
 
+;;;###autoload
 (defun durendal-enable ()
   "Enable hooks for all durendal functionality."
   (setq slime-protocol-version 'ignore)
