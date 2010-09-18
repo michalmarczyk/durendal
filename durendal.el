@@ -81,7 +81,7 @@ Terrible hack workaround for the fact that elisp lacks fscking closures.")
 (defmacro durendal-with-section (section &rest body)
   `(save-excursion
      (goto-char (point-min))
-     (when (search-forward (concat ,section " ") nil t)
+     (while (search-forward (concat ,section " ") nil t)
        (back-to-indentation)
        (mark-sexp)
        (save-restriction
@@ -102,6 +102,11 @@ Terrible hack workaround for the fact that elisp lacks fscking closures.")
      (let ((sorted (sort (split-string (buffer-substring-no-properties (point-min) (point-max))) 'string<)))
        (delete-region (point-min) (point-max))
        (insert (mapconcat 'identity sorted " "))))))
+
+;; (defun durendal-sort-libspecs ()
+;;   (goto-char (point-min))
+;;   (while ())
+;;   )
 
 (defun durendal-sort-section (section)
   (durendal-with-section
