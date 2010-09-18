@@ -124,6 +124,9 @@ Terrible hack workaround for the fact that elisp lacks fscking closures.")
    section
    (mapc 'durendal-sort-subsection '(":only" ":exclude"))
    (goto-char (point-min))
+   (search-forward-regexp "(\\S +\\S+ ")
+   (durendal-sort-libspecs)
+   (goto-char (point-min))
    ;;(forward-word) -- refer-clojure
    ;;(forward-symbol) -- bizarre-error
    (search-forward-regexp "(\\S +\\S+ ")
@@ -139,9 +142,13 @@ Terrible hack workaround for the fact that elisp lacks fscking closures.")
 (defun durendal-sort-ns ()
   (interactive)
   (save-excursion
-    (mapc 'durendal-sort-section '(":use" ":require" ":import" ":refer" ":refer-clojure"))
-    (mark-defun)
-    (indent-region (point) (mark))))
+    (goto-char (point-min))
+    (when (search-forward "(ns ")
+      (back-to-indentation)
+      (durendal-within-sexp
+       (mapc 'durendal-sort-section '(":use" ":require" ":import" ":refer" ":refer-clojure")))
+      (mark-defun)
+      (indent-region (point) (mark)))))
 
 ;; launcher
 
