@@ -84,12 +84,27 @@ Terrible hack workaround for the fact that elisp lacks fscking closures.")
        (back-to-indentation)
        (mark-sexp)
        (save-restriction
-         (narrow-to-region (mark) (point))
+         (narrow-to-region (point) (mark))
          ,@body))))
+
+(defmacro durendal-within-sexp (&rest body)
+  `(save-excursion
+     (mark-sexp)
+     (save-restriction
+       (narrow-to-region (+ (point) 1) (- (mark) 1))
+       ,@body)))
+
+(defun durendal-sort-subsection (subsection)
+  (when (search-forward (concat subsection " ") nil t)
+    (durendal-within-sexp
+     (let ((sorted (sort (split-string (buffer-substring-no-properties (point-min) (point-max))) 'string<)))
+       (delete-region (point-min) (point-max))
+       (insert (mapconcat 'identity sorted " "))))))
 
 (defun durendal-sort-section (section)
   (durendal-with-section
    section
+   (mapc 'durendal-sort-subsection '(":only" ":exclude"))
    (goto-char (point-min))
    ;;(forward-word) -- refer-clojure
    ;;(forward-symbol) -- bizarre-error
