@@ -86,7 +86,8 @@ Terrible hack workaround for the fact that elisp lacks fscking closures.")
        (mark-sexp)
        (save-restriction
          (narrow-to-region (point) (mark))
-         ,@body))))
+         ,@body
+         (goto-char (point-max))))))
 
 (defmacro durendal-within-sexp (&rest body)
   `(save-excursion
