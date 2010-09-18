@@ -80,7 +80,7 @@ Terrible hack workaround for the fact that elisp lacks fscking closures.")
 (defmacro durendal-with-section (section &rest body)
   `(save-excursion
      (goto-char (point-min))
-     (when (search-forward ,section nil t)
+     (when (search-forward (concat ,section " ") nil t)
        (back-to-indentation)
        (mark-sexp)
        (save-restriction
@@ -91,7 +91,9 @@ Terrible hack workaround for the fact that elisp lacks fscking closures.")
   (durendal-with-section
    section
    (goto-char (point-min))
-   (forward-word)
+   ;;(forward-word) -- refer-clojure
+   ;;(forward-symbol) -- bizarre-error
+   (search-forward-regexp "(.* ")
    (insert "\n")
    ;; TODO: handle wrapped lines
    (sort-lines nil (point) (- (point-max) 1))
@@ -102,7 +104,7 @@ Terrible hack workaround for the fact that elisp lacks fscking closures.")
 (defun durendal-sort-ns ()
   (interactive)
   (save-excursion
-    (mapc 'durendal-sort-section '(":use" ":require" ":import" ":refer"))
+    (mapc 'durendal-sort-section '(":use" ":require" ":import" ":refer" ":refer-clojure"))
     (mark-defun)
     (indent-region (point) (mark))))
 
