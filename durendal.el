@@ -226,6 +226,28 @@ Terrible hack workaround for the fact that elisp lacks fscking closures.")
   (modify-syntax-entry ?\} "){")
   (paredit-mode t))
 
+(defadvice slime-repl-emit (after durendal-slime-repl-emit-ad)
+  (with-current-buffer (slime-output-buffer)
+    (add-text-properties slime-output-start slime-output-end
+                         '(font-lock-face slime-repl-output-face
+                                          rear-nonsticky (font-lock-face)))))
+
+(defadvice slime-repl-insert-prompt (after durendal-slime-repl-prompt-ad)
+  (with-current-buffer (slime-output-buffer)
+    (let ((inhibit-read-only t))
+      (add-text-properties slime-repl-prompt-start-mark (point-max)
+                           '(font-lock-face slime-repl-prompt-face
+                                            rear-nonsticky
+                                            (slime-repl-prompt
+                                             read-only
+                                             font-lock-face
+                                             intangible))))))
+;;;###autoload
+(defun durendal-slime-repl-fontlock ()
+  (clojure-mode-font-lock-setup)
+  (ad-activate #'slime-repl-emit)
+  (ad-activate #'slime-repl-insert-prompt))
+
 ;; entry point:
 
 ;;;###autoload
@@ -234,6 +256,7 @@ Terrible hack workaround for the fact that elisp lacks fscking closures.")
   (setq slime-protocol-version 'ignore)
   (add-hook 'clojure-mode-hook 'durendal-enable-auto-compile)
   (add-hook 'slime-repl-mode-hook 'durendal-slime-repl-paredit)
+  (add-hook 'slime-repl-mode-hook 'durendal-slime-repl-fontlock)
   (add-hook 'sldb-mode-hook 'durendal-dim-sldb-font-lock))
 
 (provide 'durendal) ;;; durendal.el ends here
