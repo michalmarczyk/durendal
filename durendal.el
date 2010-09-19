@@ -243,10 +243,16 @@ Terrible hack workaround for the fact that elisp lacks fscking closures.")
                                              font-lock-face
                                              intangible))))))
 ;;;###autoload
-(defun durendal-slime-repl-fontlock ()
-  (clojure-mode-font-lock-setup)
+(defun durendal-enable-slime-repl-font-lock ()
+  (add-hook 'slime-repl-mode-hook 'clojure-mode-font-lock-setup)
   (ad-activate #'slime-repl-emit)
   (ad-activate #'slime-repl-insert-prompt))
+
+;;;###autoload
+(defun durendal-disable-slime-repl-font-lock ()
+  (remove-hook 'slime-repl-mode-hook 'clojure-mode-font-lock-setup)
+  (ad-deactivate #'slime-repl-emit)
+  (ad-deactivate #'slime-repl-insert-prompt))
 
 ;; entry point:
 
@@ -254,9 +260,18 @@ Terrible hack workaround for the fact that elisp lacks fscking closures.")
 (defun durendal-enable ()
   "Enable hooks for all durendal functionality."
   (setq slime-protocol-version 'ignore)
-  (add-hook 'clojure-mode-hook 'durendal-enable-auto-compile)
-  (add-hook 'slime-repl-mode-hook 'durendal-slime-repl-paredit)
-  (add-hook 'slime-repl-mode-hook 'durendal-slime-repl-fontlock)
-  (add-hook 'sldb-mode-hook 'durendal-dim-sldb-font-lock))
+  (add-hook 'slime-connected-hook
+            (lambda ()
+              (if (equal (slime-lisp-implementation-name) "clojure")
+                  (progn
+                    (add-hook 'clojure-mode-hook 'durendal-enable-auto-compile)
+                    (add-hook 'slime-repl-mode-hook 'durendal-slime-repl-paredit)
+                    (add-hook 'sldb-mode-hook 'durendal-dim-sldb-font-lock)
+                    (durendal-enable-slime-repl-font-lock))
+                (progn
+                  (remove-hook 'clojure-mode-hook 'durendal-enable-auto-compile)
+                  (remove-hook 'slime-repl-mode-hook 'durendal-slime-repl-paredit)
+                  (remove-hook 'sldb-mode-hook 'durendal-dim-sldb-font-lock)
+                  (durendal-disable-slime-repl-font-lock))))))
 
 (provide 'durendal) ;;; durendal.el ends here
