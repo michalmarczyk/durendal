@@ -257,9 +257,10 @@ Terrible hack workaround for the fact that elisp lacks fscking closures.")
 ;; entry point:
 
 ;;;###autoload
-(defun durendal-enable ()
+(defun durendal-enable (&optional disable-proto-version-check-p)
   "Enable hooks for all durendal functionality."
-  (setq slime-protocol-version 'ignore)
+  (when (not disable-proto-version-check-p)
+    (setq slime-protocol-version 'ignore))
   (add-hook 'slime-connected-hook
             (lambda ()
               (if (equal (slime-lisp-implementation-name) "clojure")
