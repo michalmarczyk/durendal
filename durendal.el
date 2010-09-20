@@ -224,6 +224,8 @@ Terrible hack workaround for the fact that elisp lacks fscking closures.")
     (kbd "}") 'paredit-close-curly)
   (modify-syntax-entry ?\{ "(}")
   (modify-syntax-entry ?\} "){")
+  (modify-syntax-entry ?\[ "(]")
+  (modify-syntax-entry ?\] ")[")
   (paredit-mode t))
 
 (defadvice slime-repl-emit (after durendal-slime-repl-emit-ad)
