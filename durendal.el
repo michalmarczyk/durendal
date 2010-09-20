@@ -31,6 +31,10 @@
 ;; * durendal-jack-in: Initiate a lein-swank + slime-connect.
 ;; * durendal-enable-auto-compile: Compile on save.
 ;; * durendal-slime-repl-paredit: Turn on paredit in the slime repl.
+;; * durendal-enable-slime-repl-font-lock: Use clojure-mode's
+;;                     font-lock settings in SLIME REPL (with tweaks
+;;                     for prompts and printouts); turn off with
+;;                     durendal-disable-slime-repl-font-lock.
 
 ;; Call durendal-enable to turn on all Durendal features.
 
