@@ -77,7 +77,7 @@
   (lexical-let ((root (locate-dominating-file default-directory "project.clj"))
                 (port (if port-prompt
                           (string-to-number (read-string "Port: " nil nil slime-port))
-                        (+ 1024 (* (random 64512)))
+                        (+ 1024 (* (random 64512))))))
     (message "Launching lein swank on %s..." port)
     (when (not root)
       (error "Not in a Leiningen project."))
@@ -130,6 +130,15 @@
 (defun durendal-enable-auto-compile ()
   (make-local-variable 'after-save-hook)
   (add-hook 'after-save-hook 'durendal-auto-compile))
+
+;; compile-buffer suppression
+
+;;;###autoload
+(defun durendal-hide-successful-compile (msg)
+  (with-struct (slime-compilation-result. notes duration successp)
+      slime-last-compilation-result
+    (when successp
+      (kill-buffer "*SLIME Compilation*"))))
 
 ;; repl
 
