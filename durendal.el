@@ -135,7 +135,6 @@
    ;; TODO: handle wrapped lines
    (sort-lines nil (point) (- (point-max) 1))
    (goto-char (point-min))
-   (setq h (buffer-substring (point) (point-max)))
    (join-line t)))
 
 ;;;###autoload
@@ -164,6 +163,7 @@
       (error "Not in a Leiningen project."))
     (shell-command (format "cd %s && lein swank %s &" root port)
                    "*lein-swank*")
+    (message "Launching lein swank on %s..." durendal-port)
     (set-process-filter (get-buffer-process "*lein-swank*")
                         (lambda (process output)
                           (when (string-match "Connection opened on" output)
@@ -281,4 +281,5 @@
                     (remove-hook 'sldb-mode-hook 'durendal-dim-sldb-font-lock)
                     (durendal-disable-slime-repl-font-lock))))))
 
-(provide 'durendal) ;;; durendal.el ends here
+(provide 'durendal)
+;;; durendal.el ends here
