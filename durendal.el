@@ -77,7 +77,7 @@
   (lexical-let ((root (locate-dominating-file default-directory "project.clj"))
                 (port (if port-prompt
                           (string-to-number (read-string "Port: " nil nil slime-port))
-                          slime-port)))
+                        (+ 1024 (* (random 64512)))
     (message "Launching lein swank on %s..." port)
     (when (not root)
       (error "Not in a Leiningen project."))
