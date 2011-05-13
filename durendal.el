@@ -4,7 +4,7 @@
 ;;
 ;; Author: Phil Hagelberg
 ;; URL: http://github.com/technomancy/durendal
-;; Version: 0.1
+;; Version: 0.2
 ;; Keywords: lisp clojure slime
 ;; Created: 2010-08-13
 ;; Package-Requires: ((clojure-mode "1.7") (slime "20100404") (paredit "22"))
@@ -27,6 +27,7 @@
 
 ;;; Features:
 
+;; * durendal-hide-successful-compile: Hide compilation buffer upon success.
 ;; * durendal-jack-in: Initiate a lein-swank + slime-connect.
 ;; * durendal-enable-auto-compile: Compile on save.
 ;; * durendal-slime-repl-paredit: Turn on paredit in the slime repl.
@@ -35,7 +36,13 @@
 ;;                     for prompts and printouts); turn off with
 ;;                     durendal-disable-slime-repl-font-lock.
 
-;; Call durendal-enable to turn on all Durendal features.
+;; Call durendal-enable to turn on all Durendal features. To enable
+;; features one at a time, simply use the corresponding add-hook call:
+
+;; (add-hook 'clojure-mode-hook 'durendal-enable-auto-compile)
+;; (add-hook 'slime-repl-mode-hook 'durendal-slime-repl-paredit)
+;; (add-hook 'sldb-mode-hook 'durendal-dim-sldb-font-lock)
+;; (add-hook 'slime-compilation-finished-hook 'durendal-hide-successful-compile)
 
 ;;; TODO:
 
