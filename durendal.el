@@ -279,10 +279,10 @@ Terrible hack workaround for the fact that elisp lacks fscking closures.")
                     (add-hook 'slime-repl-mode-hook 'durendal-slime-repl-paredit)
                     (add-hook 'sldb-mode-hook 'durendal-dim-sldb-font-lock)
                     (durendal-enable-slime-repl-font-lock))
-                (progn
-                  (remove-hook 'clojure-mode-hook 'durendal-enable-auto-compile)
-                  (remove-hook 'slime-repl-mode-hook 'durendal-slime-repl-paredit)
-                  (remove-hook 'sldb-mode-hook 'durendal-dim-sldb-font-lock)
-                  (durendal-disable-slime-repl-font-lock))))))
+                  (progn
+                    (remove-hook 'clojure-mode-hook 'durendal-enable-auto-compile)
+                    (remove-hook 'slime-repl-mode-hook 'durendal-slime-repl-paredit)
+                    (remove-hook 'sldb-mode-hook 'durendal-dim-sldb-font-lock)
+                    (durendal-disable-slime-repl-font-lock))))))
 
 (provide 'durendal) ;;; durendal.el ends here
