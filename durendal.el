@@ -73,10 +73,6 @@
 (require 'slime-repl)
 (require 'clojure-mode)
 
-(defvar durendal-port 4005
-  "The port of the currently-launching swank server.
-Terrible hack workaround for the fact that elisp lacks fscking closures.")
-
 (defvar durendal-auto-compile? t
   "Automatically compile on save when applicable.")
 
@@ -159,20 +155,19 @@ Terrible hack workaround for the fact that elisp lacks fscking closures.")
 ;;;###autoload
 (defun durendal-jack-in (&optional port-prompt)
   (interactive "P")
-  (let ((root (locate-dominating-file default-directory "project.clj")))
-    (setq durendal-port (if port-prompt
-                            (string-to-number (read-string "Port: "
-                                                           nil nil slime-port))
-                          slime-port))
-    (message "Launching lein swank on %s..." durendal-port)
+  (lexical-let ((root (locate-dominating-file default-directory "project.clj"))
+                (port (if port-prompt
+                          (string-to-number (read-string "Port: " nil nil slime-port))
+                          slime-port)))
+    (message "Launching lein swank on %s..." port)
     (when (not root)
       (error "Not in a Leiningen project."))
-    (shell-command (format "cd %s && lein swank %s &" root durendal-port)
+    (shell-command (format "cd %s && lein swank %s &" root port)
                    "*lein-swank*")
     (set-process-filter (get-buffer-process "*lein-swank*")
                         (lambda (process output)
                           (when (string-match "Connection opened on" output)
-                            (slime-connect "localhost" durendal-port)
+                            (slime-connect "localhost" port)
                             (set-process-filter process nil))))
     (message "Starting swank server...")))
 
